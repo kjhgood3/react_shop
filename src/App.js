@@ -1,15 +1,21 @@
 /* eslint-disable */
 import './App.css';
+import React, { useContext, useState, lazy, Suspense } from 'react';
 import { Button, Container, Jumbotron, Nav, Navbar, NavDropdown } from 'react-bootstrap';
-import { useState } from 'react';
 import Data from './data';
-import Detail from './Detail';
+// import Detail from './Detail';
+let Detail = lazy(() => { return import('./Detail.js') });
+import { useHistory } from "react-router";
 import { Link, Route, Switch } from 'react-router-dom';
 import axios from 'axios';
+import Cart from './Cart';
+
+export let stockContext = React.createContext();
 
 function App() {
 
   let [shoes, setShoes] = useState(Data);
+  let [stock, setStock] = useState([10, 11, 12]);
 
   return (
     <div className="App">
@@ -21,6 +27,7 @@ function App() {
             <Nav className="me-auto">
               <Nav.Link as={Link} to="/">Home </Nav.Link>
               <Nav.Link as={Link} to="/detail">Detail </Nav.Link>
+              <Nav.Link as={Link} to="/cart">Cart </Nav.Link>
               <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
@@ -46,15 +53,18 @@ function App() {
             </p>
           </Jumbotron>
           <div className="container">
-            <div className="row">
-              {
-                shoes.map((a, i) => {
-                  return (
-                    <Card key={i} shoes={a} i={i}></Card>
-                  )
-                })
-              }
-            </div>
+            <stockContext.Provider value={stock}>
+              <div className="row">
+                {
+                  shoes.map((a, i) => {
+                    return (
+                      <Card key={i} shoes={a} i={i}></Card>
+                    )
+                  })
+                }
+              </div>
+            </stockContext.Provider>
+
             <button className="btn btn-primary" onClick={() => {
               //로딩중이라는 UI 띄움
 
@@ -76,7 +86,15 @@ function App() {
         </Route>
 
         <Route path="/detail/:id">
-          <Detail shoes={shoes}></Detail>
+          <stockContext.Provider value={stock}>
+            <Suspense fallback={<div>로딩중이에요</div>}>
+              <Detail shoes={shoes} stock={stock} setStock={setStock}></Detail>
+            </Suspense>
+          </stockContext.Provider>
+        </Route>
+
+        <Route path="/cart">
+          <Cart />
         </Route>
 
         <Route path="/:id">
@@ -91,12 +109,25 @@ function App() {
 
 
 function Card(props) {
+
+  let stock = useContext(stockContext);
+  let history = useHistory();
+
   return (
-    <div className="col-md-4">
+    <div className="col-md-4" onClick={() => { history.push('/detail/' + props.i) }}>
       <img src={'https://codingapple1.github.io/shop/shoes' + (props.i + 1) + '.jpg'} width="100%" />
       <h4>{props.shoes.title}</h4>
       <p>{props.shoes.content} & {props.shoes.price}</p>
+      <Test></Test>
     </div>
+  )
+}
+
+function Test() {
+
+  let stock = useContext(stockContext);
+  return (
+    <p>재고 : {stock[1]}</p>
   )
 }
 
