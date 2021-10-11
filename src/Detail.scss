@@ -1,0 +1,48 @@
+$mainColor : #ff0000; 
+
+.red {
+    color:$mainColor;
+}
+
+@mixin 함수() {   //함수만드는 mixin
+    background: #eeeeee;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 500px;
+    width: 100%;
+    margin: auto;
+}
+
+.my-alert {
+    @include 함수();   //함수 불러오려면 앞에 @include 붙이기
+}
+
+.my-alert2 {
+    @extend.my-alert;
+    background: #ffe591;
+}
+
+
+.my-alert p {
+    margin-bottom: 0;
+}
+
+
+
+
+// div.container h4 {
+//     color : blue;
+// }
+// div.container p {
+//     color : green;
+// }
+
+// div.container {
+//     h4 {
+//         color : blue;
+//     }
+//     p {
+//         color : green;
+//     }
+// }
+

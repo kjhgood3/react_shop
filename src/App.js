@@ -3,6 +3,8 @@ import './App.css';
 import { Button, Container, Jumbotron, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { useState } from 'react';
 import Data from './data';
+import Detail from './Detail';
+import { Link, Route, Switch } from 'react-router-dom';
 
 function App() {
 
@@ -12,12 +14,12 @@ function App() {
     <div className="App">
       <Navbar bg="light" expand="lg">
         <Container>
-          <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
+          <Navbar.Brand href="#home">ShoeShop</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link href="#home">Home</Nav.Link>
-              <Nav.Link href="#link">Link</Nav.Link>
+              <Nav.Link as={Link} to="/">Home </Nav.Link>
+              <Nav.Link as={Link} to="/detail">Detail </Nav.Link>
               <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
@@ -30,31 +32,46 @@ function App() {
         </Container>
       </Navbar>
 
-      <Jumbotron className="background">
-        <h1>20% Season Off!</h1>
-        <p>
-          This is a simple hero unit, a simple jumbotron-style component for calling
-          extra attention to featured content or information.
-        </p>
-        <p>
-          <Button variant="primary">Learn more</Button>
-        </p>
-      </Jumbotron>
+      <Switch>
+        <Route exact path="/">
+          <Jumbotron className="background">
+            <h1>20% Season Off!</h1>
+            <p>
+              This is a simple hero unit, a simple jumbotron-style component for calling
+              extra attention to featured content or information.
+            </p>
+            <p>
+              <Button variant="primary">Learn more</Button>
+            </p>
+          </Jumbotron>
+          <div className="container">
+            <div className="row">
+              {
+                shoes.map((a, i) => {
+                  return (
+                    <Card key={i} shoes={a} i={i}></Card>
+                  )
+                })
+              }
+            </div>
+          </div>
 
-      <div className="container">
-        <div className="row">
-          {
-            shoes.map((a, i) => {
-              return (
-                <Card key={i} shoes={a} i={i}></Card>
-              )
-            })
-          }
-        </div>
-      </div>
+        </Route>
+
+        <Route path="/detail/:id">
+          <Detail shoes={shoes}></Detail>
+        </Route>
+
+        <Route path="/:id">
+          <div>아무거나 적었을 때 이거 보여주셈</div>
+        </Route>
+
+      </Switch>
     </div>
+
   );
 }
+
 
 function Card(props) {
   return (
