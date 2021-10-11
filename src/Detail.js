@@ -27,6 +27,7 @@ function Detail(props) {
     // 1.컴포넌트가 등장할 때, 2.컴포넌트가 update 될 때 실행된다
     // 3. 컴포넌트가 사라질때 실행될수도 있다 return 뒤에 씀
     useEffect(() => {
+
         let timer = setTimeout(() => { setAlert(false) }, 3000);
         console.log('안녕');
         return function unmount() { //컴포넌트가 사라질 때 실행되는 코드

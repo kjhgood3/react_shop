@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Data from './data';
 import Detail from './Detail';
 import { Link, Route, Switch } from 'react-router-dom';
+import axios from 'axios';
 
 function App() {
 
@@ -54,8 +55,24 @@ function App() {
                 })
               }
             </div>
-          </div>
+            <button className="btn btn-primary" onClick={() => {
+              //로딩중이라는 UI 띄움
 
+              axios.post('서버URL', { id: 'codingapple', pw: 1234 });
+
+              // 서버에 get요청함, axios는 JSON파일을 Object 형식으로 알아서 바꿔준다 ㅎ
+              axios.get('https://codingapple1.github.io/shop/data2.json')
+                .then((result) => {
+                  //로딩중이라는 UI를 안보이게
+                  console.log(result.data);
+                  setShoes([...shoes, ...result.data]); //...은 연산자 벗겨줌
+                })
+                .catch(() => {
+                  //로딩중이라는 UI를 안보이게
+                  console.log('실패했습니다.')
+                })
+            }}>더보기</button>
+          </div>
         </Route>
 
         <Route path="/detail/:id">
